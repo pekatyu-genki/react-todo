@@ -3,6 +3,7 @@ import React from 'react';
 import Form from './Form';
 import Todo from './Todo';
 
+let currentId = 0
 
 // class App extends React.Component {
 //     render() {
@@ -13,11 +14,18 @@ import Todo from './Todo';
 // 　↑上も ↓も下も　同じ　function（アロー関数が使われ始めている？）
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            todos: []
+        };
+    }
     render() {
         return (
             <div>
             
-                <Form />
+                <Form onSubmit= {this.handleSubmit} />
 
                 <label>
                     <input type="checkbox" />
@@ -31,20 +39,26 @@ class App extends React.Component {
                 </select>
 
                 <ul>
-                    <li>
-                        <Todo id={0} text="洗濯する" />
+                    {this.state.todos.map(({ id, text }) => (
+                    <li key= { id }>
+                        <Todo text={ text }/> 
                     </li>
-                    <li>
-                        <Todo id={0} text="掃除する" />
-                    </li>
-                    <li>
-                        <Todo id={0} text="料理する" />
-                    </li>
+                    ))}
                 </ul>
 
                 <button>完了済みをすべて削除</button>
             </div>
         )
+    }
+
+    handleSubmit = text => {
+        const newTodo = {
+            id: currentId,
+            text,
+        }
+        const newTodos = [...this.state.todos, newTodo]
+        this.setState({ todos: newTodos });
+        currentId++;
     }
 }
 
